@@ -32,6 +32,11 @@ spring:
   sql:
     init:
       mode: always # 테스트 데이터 언제 실행
+  data:
+    rest:
+      base-path: /api
+      detection-strategy: annotated # @RepositoryRestResource 붙은 repository만 사용
+
 
 ---
 # 줄 3개로 profile 변경
