@@ -8,3 +8,4 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface ArticleCommentRepository extends JpaRepository<ArticleComment, Long> {
 
 }
+
