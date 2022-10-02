@@ -36,6 +36,9 @@ spring:
     rest:
       base-path: /api
       detection-strategy: annotated # @RepositoryRestResource 붙은 repository만 사용
+  thymeleaf3:
+    decoupled-logic: true
+
 
 
 ---
