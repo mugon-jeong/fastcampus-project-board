@@ -29,7 +29,7 @@ public class ArticleService {
         if (searchKeyword == null || searchKeyword.isBlank()) {
             return articleRepository.findAll(pageable).map(ArticleDto::from);
         }
-        switch (searchType) {
+        return switch (searchType) {
             // case가 return됨
             case TITLE -> articleRepository.findByTitleContaining(searchKeyword, pageable)
                 .map(ArticleDto::from);
@@ -42,8 +42,7 @@ public class ArticleService {
                     .map(ArticleDto::from);
             case HASHTAG -> articleRepository.findByHashtag("#" + searchKeyword, pageable)
                 .map(ArticleDto::from);
-        }
-        return Page.empty();
+        };
     }
 
     @Transactional(readOnly = true)
