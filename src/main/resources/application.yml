@@ -26,6 +26,7 @@ spring:
       hibernate:
         format_sql: true # 한줄로 나오는 디버그 쿼리문을 포맷팅해줌
         default_batch_fetch_size: 100 # jpa에서 복잡한 쿼리를 사용할때 한번에 벌크로 셀렉트
+    open-in-view: false
   h2:
     console:
       enabled: false
