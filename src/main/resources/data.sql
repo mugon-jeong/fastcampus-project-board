@@ -1,12 +1,14 @@
 -- 테스트 계정
 -- TODO: 테스트용이지만 비밀번호가 노출된 데이터 세팅. 개선하는 것이 좋을 지 고민해 보자.
+-- 패스워드 앞에 {noop} 설정을 넣어주면 패스워드 인코더가 인코딩안함
 insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by,
                           modified_at, modified_by)
-values ('uno', 'asdf1234', 'Uno', 'uno@mail.com', 'I am Uno.', now(), 'uno', now(), 'uno')
+values ('uno', '{noop}asdf1234', 'Uno', 'uno@mail.com', 'I am Uno.', now(), 'uno', now(), 'uno')
 ;
 insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by,
                           modified_at, modified_by)
-values ('uno2', 'asdf1234', 'Uno2', 'uno2@mail.com', 'I am Uno2.', now(), 'uno2', now(), 'uno2')
+values ('uno2', '{noop}asdf1234', 'Uno2', 'uno2@mail.com', 'I am Uno2.', now(), 'uno2', now(),
+        'uno2')
 ;
 
 -- 123 게시글
@@ -1410,4 +1412,3 @@ values (49, 'uno',
         '2021-06-06 01:59:25', 'Vittorio', 'Milty'),
        (19, 'uno', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.',
         '2021-05-07 23:57:29', '2021-04-03 21:55:11', 'Oliver', 'Graehme')
-;
