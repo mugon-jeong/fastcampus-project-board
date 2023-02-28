@@ -1,5 +1,6 @@
 package com.fastcampus.projectboard.domain;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -11,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -24,7 +27,6 @@ import lombok.ToString.Exclude;
 @ToString(callSuper = true)
 @Table(indexes = {
     @Index(columnList = "title"),
-    @Index(columnList = "hashtag"),
     @Index(columnList = "createdAt"),
     @Index(columnList = "createdBy"),
 })
@@ -37,8 +39,8 @@ public class Article extends AuditingFields {
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>(); // 중복 허용 x
 
     @Setter
-    @ManyToOne(optional = false)
     @JoinColumn(name = "userId")
+    @ManyToOne(optional = false)
     private UserAccount userAccount; // 유저 정보 (ID)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,22 +51,42 @@ public class Article extends AuditingFields {
     @Setter
     @Column(nullable = false, length = 10000)
     private String content; // 본문
-    @Setter
-    private String hashtag; // 해시태그
+
+    @ToString.Exclude
+    @JoinTable(
+        name = "article_hashtag",
+        // 어떤 데이터를 기준으로 join
+        joinColumns = @JoinColumn(name = "articleId"),
+        // 상대쪽 join할 데이터
+        inverseJoinColumns = @JoinColumn(name = "hashtagId")
+    )
+    // article 테이블에 insert나 update가 있을 경우 hashtag 테이블에도 적용
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Hashtag> hashtags = new LinkedHashSet<>();
 
     protected Article() {
     }
 
-    private Article(UserAccount userAccount, String title, String content, String hashtag) {
+    private Article(UserAccount userAccount, String title, String content) {
         this.userAccount = userAccount;
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
     }
 
-    public static Article of(UserAccount userAccount, String title, String content,
-        String hashtag) {
-        return new Article(userAccount, title, content, hashtag);
+    public static Article of(UserAccount userAccount, String title, String content) {
+        return new Article(userAccount, title, content);
+    }
+
+    public void addHashtag(Hashtag hashtag){
+        this.getHashtags().add(hashtag);
+    }
+
+    public void addHashtags(Collection<Hashtag> hashtags){
+        this.getHashtags().addAll(hashtags);
+    }
+
+    public void clearHashtags(){
+        this.getHashtags().clear();
     }
 
     @Override

@@ -31,8 +31,6 @@ public interface ArticleRepository extends
 
     Page<Article> findByUserAccount_NicknameContaining(String nickname, Pageable pageable);
 
-    Page<Article> findByHashtag(String hashtag, Pageable pageable);
-
     void deleteByIdAndUserAccount_UserId(Long articleId, String userid);
 
 
@@ -40,11 +38,11 @@ public interface ArticleRepository extends
     default void customize(QuerydslBindings bindings, QArticle root) {
         bindings.excludeUnlistedProperties(true); // including에 포함 되지 않은 필드는 검색에서 제외
         // 원하는 필드 추가
-        bindings.including(root.title, root.content, root.hashtag, root.createdAt, root.createdBy);
+        bindings.including(root.title, root.content, root.hashtags, root.createdAt, root.createdBy);
         // 필드 별 검색 조건
         // bindings.bind(root.title).first(StringExpression::likeIgnoreCase); // like '${v}'
         bindings.bind(root.title).first(StringExpression::containsIgnoreCase); // like '%s{v}%'
-        bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase);
+        bindings.bind(root.hashtags.any().hashtagName).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.content).first(StringExpression::containsIgnoreCase);
         bindings.bind(root.createdAt).first(DateTimeExpression::eq);
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase);
