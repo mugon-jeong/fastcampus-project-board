@@ -72,15 +72,15 @@ public class Article extends AuditingFields {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Article article)) {
+        if (!(o instanceof Article that)) {
             return false;
         }
         // 지금 막 만든, 아직 영속화 되지 않은 entity는 모두 동등성 검사 탈락
-        return id != null && id.equals(article.id);
+        return this.getId() != null && this.getId().equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.getId());
     }
 }
