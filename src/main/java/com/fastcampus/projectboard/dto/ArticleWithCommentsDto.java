@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.dto;
 
 import com.fastcampus.projectboard.domain.Article;
+import com.fastcampus.projectboard.domain.Hashtag;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,7 +13,7 @@ public record ArticleWithCommentsDto(
     Set<ArticleCommentDto> articleCommentDtos,
     String title,
     String content,
-    String hashtag,
+    Set<HashtagDto> hashtagDtos,
     LocalDateTime createdAt,
     String createdBy,
     LocalDateTime modifiedAt,
@@ -20,10 +21,10 @@ public record ArticleWithCommentsDto(
 ) {
 
     public static ArticleWithCommentsDto of(Long id, UserAccountDto userAccountDto,
-        Set<ArticleCommentDto> articleCommentDtos, String title, String content, String hashtag,
+        Set<ArticleCommentDto> articleCommentDtos, String title, String content, Set<HashtagDto> hashtagDtos,
         LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
         return new ArticleWithCommentsDto(id, userAccountDto, articleCommentDtos, title, content,
-            hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
+            hashtagDtos, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     public static ArticleWithCommentsDto from(Article entity) {
@@ -35,7 +36,9 @@ public record ArticleWithCommentsDto(
                 .collect(Collectors.toCollection(LinkedHashSet::new)),
             entity.getTitle(),
             entity.getContent(),
-            entity.getHashtag(),
+            entity.getHashtags().stream()
+                  .map(HashtagDto::from)
+                  .collect(Collectors.toUnmodifiableSet()),
             entity.getCreatedAt(),
             entity.getCreatedBy(),
             entity.getModifiedAt(),

@@ -7,6 +7,7 @@ import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +45,11 @@ public class ArticleService {
             case NICKNAME ->
                 articleRepository.findByUserAccount_NicknameContaining(searchKeyword, pageable)
                     .map(ArticleDto::from);
-            case HASHTAG -> articleRepository.findByHashtag("#" + searchKeyword, pageable)
-                .map(ArticleDto::from);
+            case HASHTAG -> articleRepository.findByHashtagNames(
+                                                 Arrays.stream(searchKeyword.split(" ")).toList(),
+                                                 pageable
+                                             )
+                                             .map(ArticleDto::from);
         };
     }
 
@@ -84,7 +88,6 @@ public class ArticleService {
                 if (dto.content() != null) {
                     article.setContent(dto.content());
                 }
-                article.setHashtag(dto.hashtag());
             }
         } catch (EntityNotFoundException e) {
             log.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다. - {}", e.getLocalizedMessage());
@@ -103,7 +106,7 @@ public class ArticleService {
         if (hashtag == null || hashtag.isBlank()) {
             return Page.empty(pageable);
         }
-        return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDto::from);
+        return articleRepository.findByHashtagNames(null, pageable).map(ArticleDto::from);
     }
 
     public List<String> getHashtags() {
