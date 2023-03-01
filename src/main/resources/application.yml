@@ -13,10 +13,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:mysql://192.168.35.204:3307/fastcampus
+    url: jdbc:postgresql://192.168.35.204:5432/fastcampus
     username: conny
     password: conny123
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     defer-datasource-initialization: true # 테스트용 데이터베이스 띄울때 초기데이터
     hibernate:
