@@ -15,3 +15,13 @@ services: # 서비스들을 선언합니다.
       - MYSQL_PASSWORD=conny123
       - MYSQL_ROOT_PASSWORD=conny123
       - TZ=Asia/Seoul
+  postgres:
+    container_name: postgre-db
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - TZ=Asia/Seoul
+      - POSTGRES_DB=fastcampus
+      - POSTGRES_USER=conny
+      - POSTGRES_PASSWORD=conny123
