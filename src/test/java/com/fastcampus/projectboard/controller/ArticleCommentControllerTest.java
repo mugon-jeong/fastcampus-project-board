@@ -28,21 +28,25 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("View 컨트롤러 - 댓글")
 @Import({TestSecurityConfig.class, FormDataEncoder.class})
-@WebMvcTest(ArticleCommentController.class) // 특정 클래스만 테스트하도록 선택
+@WebMvcTest(ArticleCommentController.class)
 class ArticleCommentControllerTest {
 
     private final MockMvc mvc;
+
     private final FormDataEncoder formDataEncoder;
 
     @MockBean
     private ArticleCommentService articleCommentService;
 
-    public ArticleCommentControllerTest(
+
+    ArticleCommentControllerTest(
         @Autowired MockMvc mvc,
-        @Autowired FormDataEncoder formDataEncoder) {
+        @Autowired FormDataEncoder formDataEncoder
+    ) {
         this.mvc = mvc;
         this.formDataEncoder = formDataEncoder;
     }
+
 
     @WithUserDetails(value = "unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][POST] 댓글 등록 - 정상 호출")
@@ -52,18 +56,18 @@ class ArticleCommentControllerTest {
         long articleId = 1L;
         ArticleCommentRequest request = ArticleCommentRequest.of(articleId, "test comment");
         willDoNothing().given(articleCommentService)
-            .saveArticleComment(any(ArticleCommentDto.class));
+                       .saveArticleComment(any(ArticleCommentDto.class));
 
         // When & Then
         mvc.perform(
-                post("/comments/new")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .content(formDataEncoder.encode(request))
-                    .with(csrf())
-            )
-            .andExpect(status().is3xxRedirection())
-            .andExpect(view().name("redirect:/articles/" + articleId))
-            .andExpect(redirectedUrl("/articles/" + articleId));
+               post("/comments/new")
+                   .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                   .content(formDataEncoder.encode(request))
+                   .with(csrf())
+           )
+           .andExpect(status().is3xxRedirection())
+           .andExpect(view().name("redirect:/articles/" + articleId))
+           .andExpect(redirectedUrl("/articles/" + articleId));
         then(articleCommentService).should().saveArticleComment(any(ArticleCommentDto.class));
     }
 
@@ -79,14 +83,39 @@ class ArticleCommentControllerTest {
 
         // When & Then
         mvc.perform(
-                post("/comments/" + articleCommentId + "/delete")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .content(formDataEncoder.encode(Map.of("articleId", articleId)))
-                    .with(csrf())
-            )
-            .andExpect(status().is3xxRedirection())
-            .andExpect(view().name("redirect:/articles/" + articleId))
-            .andExpect(redirectedUrl("/articles/" + articleId));
+               post("/comments/" + articleCommentId + "/delete")
+                   .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                   .content(formDataEncoder.encode(Map.of("articleId", articleId)))
+                   .with(csrf())
+           )
+           .andExpect(status().is3xxRedirection())
+           .andExpect(view().name("redirect:/articles/" + articleId))
+           .andExpect(redirectedUrl("/articles/" + articleId));
         then(articleCommentService).should().deleteArticleComment(articleCommentId, userId);
     }
+
+    @WithUserDetails(value = "unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("[view][POST] 대댓글 등록 - 정상 호출")
+    @Test
+    void givenArticleCommentInfoWithParentCommentId_whenRequesting_thenSavesNewChildComment()
+        throws Exception {
+        // Given
+        long articleId = 1L;
+        ArticleCommentRequest request = ArticleCommentRequest.of(articleId, 1L, "test comment");
+        willDoNothing().given(articleCommentService)
+                       .saveArticleComment(any(ArticleCommentDto.class));
+
+        // When & Then
+        mvc.perform(
+               post("/comments/new")
+                   .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                   .content(formDataEncoder.encode(request))
+                   .with(csrf())
+           )
+           .andExpect(status().is3xxRedirection())
+           .andExpect(view().name("redirect:/articles/" + articleId))
+           .andExpect(redirectedUrl("/articles/" + articleId));
+        then(articleCommentService).should().saveArticleComment(any(ArticleCommentDto.class));
+    }
+
 }
