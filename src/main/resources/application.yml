@@ -13,9 +13,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://192.168.35.204:5432/fastcampus
-    username: conny
-    password: conny123
+    url: ${LOCAL_DB_URL}
+    username: ${LOCAL_DB_USERNAME}
+    password: ${LOCAL_DB_PASSWORD}
   jpa:
     defer-datasource-initialization: true # 테스트용 데이터베이스 띄울때 초기데이터
     hibernate:
