@@ -38,8 +38,22 @@ spring:
       detection-strategy: annotated # @RepositoryRestResource 붙은 repository만 사용
   thymeleaf3:
     decoupled-logic: true
-
-
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}XESP0Zb6qokWPDUYPeQX6lz28H7FsvCa
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id # 사용자 정보 고유값
 
 ---
 # 줄 3개로 profile 변경
