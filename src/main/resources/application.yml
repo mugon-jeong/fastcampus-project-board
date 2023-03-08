@@ -44,7 +44,7 @@ spring:
         registration:
           kakao:
             client-id: ${KAKAO_OAUTH_CLIENT_ID}
-            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}XESP0Zb6qokWPDUYPeQX6lz28H7FsvCa
+            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
             client-authentication-method: POST
@@ -54,6 +54,15 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id # 사용자 정보 고유값
+  application:
+    name: fastcampus-board
+  cloud:
+    vault: #vault는 yml을 덮어쓰는 형식으로 값을 넣어줌
+      scheme: http
+      authentication: token
+      token: ${VAULT_TOKEN}
+  config:
+    import: vault://
 
 ---
 # 줄 3개로 profile 변경
