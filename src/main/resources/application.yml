@@ -69,10 +69,9 @@ spring:
 spring:
   config:
     activate:
-      on-profile: testdb
+      on-profile: test
   datasource:
     url: jdbc:h2:mem:fastcampus;mode=mysql
-    driver-class-name: org.h2.Driver
   sql:
     init:
       mode: always
