@@ -10,7 +10,6 @@ logging:
     org.springframework.web.servlet: debug # response, request 로그
     org.hibernate.type.descriptor.sql.BasicBinder: trace # 쿼리 로그에서 바인딩 파라미터를 보기위해 설정
 
-
 spring:
   datasource:
     url: ${LOCAL_DB_URL}
