@@ -1,0 +1,20 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+    authors:
+      - octocat
+  categories:
+    - title: Documentation  🛠
+      labels:
+        - documentation 
+    - title: Exciting New Features 🎉
+      labels:
+        - enhancement
+    - title: Bugfix
+      labels:
+        - bug
+    - title: New Feature with Document
+      labels:
+        - documentation
+        - enhancement
