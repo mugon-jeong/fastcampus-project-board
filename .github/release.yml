@@ -5,6 +5,10 @@ changelog:
     authors:
       - octocat
   categories:
+    - title: New Feature with Document
+      labels:
+        - documentation
+        - enhancement
     - title: Documentation  🛠
       labels:
         - documentation 
@@ -14,7 +18,3 @@ changelog:
     - title: Bugfix
       labels:
         - bug
-    - title: New Feature with Document
-      labels:
-        - documentation
-        - enhancement
